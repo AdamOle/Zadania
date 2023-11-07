@@ -1,48 +1,44 @@
-﻿using namespace std;
-
+using namespace std;
 #include <iostream>
 
-int ZliczLiczbyujemne(int AA[10])
-{
-    int ile = 0;
-    int pominiete = 0;
-    int n = 0;
-    int* BB = new int[n];
-    for (int i = 0; i < 10; i++)
-    {
-
-        if (AA[i] < 0)
-        {
-            cout << endl << "liczba ujemne:";
-            ile++;
-            BB[n] = AA[i];
-
-            cout << BB[n];
-        }
-        else
-        {
-            pominiete++;
-        }
+int main() {
+    const int arraySize = 10;
+    double AA[arraySize];
+    int licznik = 0;
 
 
-
-
-    }
-    cout << endl << "Liczb ujemnych: " << ile;
-    cout << endl << "Pominietych: " << pominiete;
-    return BB[n];
-}
-
-int main()
-{
-    int AA[10];
-    for (int i = 0; i < 10; i++)
-    {
-
-        cout << endl << "Wprowadz liczbe :";
+    cout << "Wprowadź 10 liczb:\n";
+    for (int i = 0; i < arraySize; ++i) {
+        cout << "Liczba " << i + 1 << ": ";
         cin >> AA[i];
+        if (AA[i] < 0) {
+            licznik++;
+        }
     }
-    ZliczLiczbyujemne(AA);
 
+
+    double* BB = new double[licznik];
+    int index = 0;
+
+
+    for (int i = 0; i < arraySize; ++i) {
+        if (AA[i] < 0) {
+            BB[index] = AA[i];
+            index++;
+        }
+    }
+
+
+    cout << "Ujemne liczby w tablicy BB:\n";
+    for (int i = 0; i < licznik; ++i) {
+        cout << BB[i] << " ";
+    }
+    cout << "\nIlosc ujemnych liczb: " << licznik << "\n";
+    cout << "Ilosc pominietych liczb: " << (arraySize - licznik) << "\n";
+
+
+    delete[] BB;
+
+    return 0;
 }
 
