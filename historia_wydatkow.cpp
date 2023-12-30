@@ -1,83 +1,90 @@
 ﻿#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
 using namespace std;
+
 struct Expense {
-    string category;
     double amount;
     string date;
+    string category;
 };
 
-bool compareByCategory(const Expense& a, const Expense& b) {
-    return a.category < b.category;
-}
+class History {
+private:
+    vector<Expense> expenses;
 
-bool compareByDate(const Expense& a, const Expense& b) {
-    return a.date < b.date;
-}
+public:
+    void DodajWydatek(const string& date, const string& category, double amount) {
+        expenses.push_back({ amount, date, category });
+    }
 
-void bubbleSort(Expense* arr, int n, bool (*compareFunction)(const Expense&, const Expense&)) {
-    for (int i = 0; i < n - 1; ++i) {
-        for (int j = 0; j < n - i - 1; ++j) {
-            if (!compareFunction(arr[j], arr[j + 1])) {
-                swap(arr[j], arr[j + 1]);
+    void WyborSortowania() {
+        cout << "Czy chcesz posortować wydatki? (tak/nie): ";
+        string odpowiedz;
+        cin >> odpowiedz;
+
+        if (odpowiedz == "tak") {
+            cout << "Wybierz metodę sortowania:\n1. Po dacie\n2. Po wielkości\n3. Po kategorii\nWybór: ";
+            int wybor;
+            cin >> wybor;
+
+            switch (wybor) {
+            case 1:
+                SortowaniePoDacie();
+                break;
+            case 2:
+                SortowaniePoWielkosci();
+                break;
+            case 3:
+                WyborKategorii();
+                break;
+            default:
+                cout << "Niepoprawny wybór. Wyświetlam niesortowane wydatki.\n";
             }
         }
+
+        WyswietlWydatki();
     }
-}
 
-void displayExpenses(Expense* arr, int n, const string& selectedCategory) {
-    cout << "-------------------------\n";
-    cout << " Kategoria  |  Kwota  |  Data\n";
-    cout << "-------------------------\n";
+    void SortowaniePoWielkosci() {
+        sort(expenses.begin(), expenses.end(), [](const Expense& a, const Expense& b) {
+            return a.amount < b.amount;
+            });
+    }
 
-    for (int i = 0; i < n; ++i) {
-        if (selectedCategory.empty() || arr[i].category == selectedCategory) {
-            cout << " " << arr[i].category << "  |  " << arr[i].amount << "  |  " << arr[i].date << "\n";
+    void SortowaniePoDacie() {
+        sort(expenses.begin(), expenses.end(), [](const Expense& a, const Expense& b) {
+            return a.date < b.date;
+            });
+    }
+
+    void WyborKategorii() {
+        cout << "Podaj kategorię (np. Jedzenie, Transport, Rozrywka): ";
+        string chosenCategory;
+        cin.ignore();
+        getline(cin, chosenCategory);
+
+        expenses.erase(remove_if(expenses.begin(), expenses.end(), [&chosenCategory](const Expense& e) {
+            return e.category != chosenCategory;
+            }), expenses.end());
+    }
+
+    void WyswietlWydatki() {
+        for (const Expense& expense : expenses) {
+            cout << "Data: " << expense.date << ", Kwota: " << expense.amount << " PLN, Kategoria: " << expense.category << '\n';
         }
     }
-}
+};
 
 int main() {
-    const int maxExpenses = 100;
-    Expense* expenses = new Expense[maxExpenses];
-  
-    expenses[0] = { "Jedzenie", 50.0, "2023-11-01" };
-    expenses[1] = { "Transport", 30.0, "2023-11-02" };
-    expenses[2] = { "Rozrywka", 20.0, "2023-11-03" };
+    History historia;
     
-    int numberOfExpenses = 3;
+    historia.DodajWydatek("2023-01-01", "Jedzenie", 50.0);
+    historia.DodajWydatek("2023-01-02", "Transport", 20.0);
+    historia.DodajWydatek("2023-01-03", "Rozrywka", 30.0);
 
-   
-
-    if (numberOfExpenses > 0) {
-       
-        bool sortByCategory = false;
-        cout << "Czy chcesz posortowac wydatki wedlug kategorii? (T/N): ";
-        char sortChoice;
-        cin >> sortChoice;
-        if (sortChoice == 'T' || sortChoice == 't') {
-            sortByCategory = true;
-            bubbleSort(expenses, numberOfExpenses, compareByCategory);
-
-            string selectedCategory;
-            cout << "Podaj kategorie, dla ktorej chcesz zobaczyc historie wydatkow: ";
-            cin >> selectedCategory;
-
-            cout << "Historia Wydatkow dla kategorii " << selectedCategory << ":\n";
-            displayExpenses(expenses, numberOfExpenses, selectedCategory);
-        }
-        else {
-            bubbleSort(expenses, numberOfExpenses, compareByDate);
-
-            cout << "Historia Wydatkow posortowana chronologicznie:\n";
-            displayExpenses(expenses, numberOfExpenses, "");
-        }
-    }
-    else {
-        cout << "Brak dostępnych wydatków do wyświetlenia.\n";
-    }
-
-
-    delete[] expenses;
+    historia.WyborSortowania();
 
     return 0;
 }
