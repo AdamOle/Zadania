@@ -15,10 +15,10 @@ namespace HistoryTest
         {
             History historia;
 
-            // Dodaj wydatek
+            // dodajemy losowy  wydatek
             historia.DodajWydatek("2023-01-04", "Jedzenie", 60.0);
 
-            // Sprawdü, czy wydatek zosta≥ dodany poprawnie
+            // teraz sprawdzamy  czy wydatek zosta≈Ç dodany poprawnie
             vector<Expense> expenses = historia.getExpenses();
             Assert::AreEqual("2023-01-04", expenses[0].date.c_str()); // Oczekiwana data
             Assert::AreEqual("Jedzenie", expenses[0].category.c_str()); // Oczekiwana kategoria
@@ -29,15 +29,15 @@ namespace HistoryTest
         {
             History historia;
 
-            // Dodaj wydatki w losowej kolejnoúci
+            // wydatki w losowej kolejno≈õci
             historia.DodajWydatek("2023-01-04", "Jedzenie", 60.0);
             historia.DodajWydatek("2023-01-02", "Transport", 20.0);
             historia.DodajWydatek("2023-01-03", "Rozrywka", 30.0);
 
-            // Posortuj wydatki po dacie
+            // sortowanie po dacie
             historia.SortowaniePoDacie();
 
-            // Sprawdü, czy wydatki sπ posortowane poprawnie
+            // Sprawdzamy czy wydatki sƒÖ posortowane poprawnie
             vector<Expense> expenses = historia.getExpenses();
             Assert::AreEqual("2023-01-02", expenses[0].date.c_str());
             Assert::AreEqual("2023-01-03", expenses[1].date.c_str());
